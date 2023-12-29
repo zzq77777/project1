@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>计算过程</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+
+        input[type="submit"] {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        #results {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>加法计算</h1>
+    <form>
+        <label for="data">输入数据（用逗号分隔）：</label>
+        <input type="text" id="data" required><br>
+        <label for="result">输入结果：</label>
+        <input type="text" id="result" required><br>
+        <input type="button" value="计算" onclick="calculate()"><br>
+    </form>
+
+    <div id="results">
+        <!-- 这里用于显示计算结果 -->
+    </div>
+
+    <script>
+        function calculate() {
+            const dataInput = document.getElementById('data');
+            const resultInput = document.getElementById('result');
+            const resultsDiv = document.getElementById('results');
+
+            const data = dataInput.value.split(',').map(Number);
+            const result = parseInt(resultInput.value);
+
+            const resultExpressions = [];
+
+            for (let i = 0; i < data.length; i++) {
+                backtrack(i, data[i], `${data[i]}`);
+            }
+
+            function backtrack(index, currentSum, expression) {
+                if (currentSum === result) {
+                    resultExpressions.push(expression);
+                }
+
+                if (index >= data.length) {
+                    return;
+                }
+
+                for (let i = index + 1; i < data.length; i++) {
+                    backtrack(i, currentSum + data[i], `${expression} + ${data[i]}`);
+                }
+            }
+
+            if (resultExpressions.length > 0) {
+                resultsDiv.innerHTML = '';
+                const ul = document.createElement('ul');
+                resultExpressions.forEach(expression => {
+                    const li = document.createElement('li');
+                    li.textContent = expression;
+                    ul.appendChild(li);
+                });
+                resultsDiv.appendChild(ul);
+            } else {
+                resultsDiv.textContent = '未找到符合条件的加法计算过程.';
+            }
+        }
+    </script>
+</body>
+</html>
